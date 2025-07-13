@@ -1,2 +1,4 @@
 tmp/cache/
 tmp/development_secret.txt
+db/*.sqlite3
+log/*.log
