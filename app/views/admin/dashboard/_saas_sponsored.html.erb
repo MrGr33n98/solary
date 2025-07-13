@@ -1,0 +1,10 @@
+<h3>SaaS Sponsored Records</h3>
+<% if saas_sponsored_records.any? %>
+  <ul>
+    <% saas_sponsored_records.each do |record| %>
+      <li>Company: <%= record.solar_company.name %> - Start Date: <%= record.start_date %> - End Date: <%= record.end_date %> - Budget: <%= record.budget %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No SaaS sponsored records available.</p>
+<% end %>

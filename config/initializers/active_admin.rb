@@ -6,6 +6,30 @@ ActiveAdmin.setup do |config|
   #
   config.site_title = "Rails Blog Demo"
 
+  config.namespace :admin do |admin|
+    admin.build_menu do |menu|
+      menu.add label: "Painel Administrativo", url: "/admin/dashboard", priority: 1
+      menu.add label: "Artigos", url: "/admin/solar_contents?q%5Bcontent_type_eq%5D=article", priority: 2
+      menu.add label: "Avaliações", url: "/admin/solar_reviews", priority: 3
+      menu.add label: "H2 ADS", url: "/admin/h2_ads", priority: 4
+      menu.add label: "Badges", url: "/admin/badges", priority: 5
+      menu.add label: "Campanhas de Reviews", url: "/admin/review_campaigns", priority: 6
+      menu.add label: "Categorias", url: "/admin/categories", priority: 7
+      menu.add label: "Conteúdos", url: "/admin/solar_contents", priority: 8
+      menu.add label: "FÓRUM - Perguntas", url: "/admin/forum_questions", priority: 9
+      menu.add label: "FÓRUM - Respostas", url: "/admin/forum_answers", priority: 10
+      menu.add label: "Feature Groups", url: "/admin/feature_groups", priority: 11
+      menu.add label: "Planos e preços", url: "/admin/plans", priority: 12
+      # menu.add label: "Produtos", url: "/admin/solar_companies", priority: 13 # Removed due to consolidation
+      menu.add label: "SAAS - Gestão de acesso a produto", url: "/admin/saas_access_management", priority: 15
+      menu.add label: "SAAS - Gestão de membros", url: "/admin/solar_users", priority: 16
+      menu.add label: "SAAS - Patrocinados", url: "/admin/saas_sponsored", priority: 18
+      menu.add label: "Posts", url: "/admin/posts", priority: 19
+      menu.add label: "Comments", url: "/admin/comments", priority: 20
+      menu.add label: "Admin Users", url: "/admin/admin_users", priority: 21
+    end
+  end
+
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
   #

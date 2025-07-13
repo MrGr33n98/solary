@@ -1,17 +1,23 @@
-user1 = User.create(email: 'test1@test.com', name: 'test1', password: 'password', password_confirmation: 'password')
-user2 = User.create(email: 'test2@test.com', name: 'test2', password: 'password', password_confirmation: 'password')
+SolarUser.destroy_all
+SolarCompany.destroy_all
+ReviewCampaign.destroy_all
+SolarReview.destroy_all
+SolarContent.destroy_all
+Category.destroy_all
+Badge.destroy_all
 
-3.times do |i|
-  post1 = Post.create(title: "Title #{i}", body: "Body #{i} words goes here idk...", user_id: user1.id)
-  post2 = Post.create(title: "Title #{i}", body: "Body #{i} words goes here idk...", user_id: user2.id)
+admin_user = SolarUser.create!(email: 'admin@solarenergy.com', name: 'Admin', password: 'password', password_confirmation: 'password', role: :admin)
+moderator_user = SolarUser.create!(email: 'moderator@solarenergy.com', name: 'Moderator', password: 'password', password_confirmation: 'password', role: :moderator)
+regular_user = SolarUser.create!(email: 'user@solarenergy.com', name: 'User', password: 'password', password_confirmation: 'password', role: :user)
 
-  3.times do |_j|
-    Comment.create(post_id: post1.id, user_id: user2.id, body: "Comment body for Post #{post1.id} by User #{user2.id}")
-    Comment.create(post_id: post2.id, user_id: user1.id, body: "Comment body for Post #{post2.id} by User #{user1.id}")
-  end
-end
+# Update created_by_id and updated_by_id for initial users after they are created
+admin_user.update_columns(created_by_id: admin_user.id, updated_by_id: admin_user.id)
+moderator_user.update_columns(created_by_id: admin_user.id, updated_by_id: admin_user.id)
+regular_user.update_columns(created_by_id: admin_user.id, updated_by_id: admin_user.id)
 
-if Rails.env.development?
-  AdminUser.create!(email: 'admin@example.com', password: 'password',
-                    password_confirmation: 'password')
-end
+company = SolarCompany.create!(name: 'SolarCo 1', location: 'Location 1', installed_capacity_mw: 10.5, user_id: moderator_user.id, status: 'active', created_by_id: admin_user.id, updated_by_id: admin_user.id)
+review_campaign = ReviewCampaign.create!(solar_company: company, user_id: moderator_user.id, title: 'Summer Campaign', start_date: DateTime.now, end_date: DateTime.now + 30.days, created_by_id: admin_user.id, updated_by_id: admin_user.id)
+SolarReview.create!(solar_company: company, user_id: regular_user.id, rating: 4, comment: 'Great service', status: 'pending', review_campaign: review_campaign, created_by_id: admin_user.id, updated_by_id: admin_user.id)
+category = Category.create!(name: 'Solar Guides')
+SolarContent.create!(solar_company: company, user_id: moderator_user.id, title: 'Solar Guide', content_type: 'guide', body: 'Installation guide', category: category, created_by_id: admin_user.id, updated_by_id: admin_user.id)
+Badge.create!(name: 'Top Contributor', description: 'For active users', badgeable: regular_user)

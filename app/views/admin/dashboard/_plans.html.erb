@@ -1,0 +1,33 @@
+<div class="card mt-6">
+  <h3 class="text-xl font-bold mb-4">Planos e Preços</h3>
+  <table class="w-full">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Duration (Months)</th>
+        <th>Features</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% plans.each do |plan| %>
+        <tr>
+          <td><%= plan.name %></td>
+          <td><%= number_to_currency(plan.price) %></td>
+          <td><%= plan.duration_months %></td>
+          <td>
+            <ul>
+              <% plan.features.each do |feature| %>
+                <li><%= feature %></li>
+              <% end %>
+            </ul>
+          </td>
+          <td><%= plan.description %></td>
+          <td><%= link_to 'Activate', activate_plan_admin_plan_path(plan), method: :put %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

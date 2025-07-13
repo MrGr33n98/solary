@@ -1,0 +1,515 @@
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "active_storage_attachments"[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE TABLE "active_storage_attachments" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "record_type" varchar NOT NULL, "record_id" bigint NOT NULL, "blob_id" bigint NOT NULL, "created_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE INDEX "index_active_storage_attachments_on_blob_id" ON "active_storage_attachments" ("blob_id")[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_attachments_uniqueness" ON "active_storage_attachments" ("record_type", "record_id", "name", "blob_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "active_storage_blobs"[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE TABLE "active_storage_blobs" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "key" varchar NOT NULL, "filename" varchar NOT NULL, "content_type" varchar, "metadata" text, "service_name" varchar NOT NULL, "byte_size" bigint NOT NULL, "checksum" varchar, "created_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_blobs_on_key" ON "active_storage_blobs" ("key")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "active_storage_variant_records"[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE TABLE "active_storage_variant_records" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "blob_id" bigint NOT NULL, "variation_digest" varchar NOT NULL)[0m
+  [1m[35m (2.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_variant_records_uniqueness" ON "active_storage_variant_records" ("blob_id", "variation_digest")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "admin_users"[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "admin_users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar, "reset_password_sent_at" datetime(6), "remember_created_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_admin_users_on_email" ON "admin_users" ("email")[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_admin_users_on_reset_password_token" ON "admin_users" ("reset_password_token")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "badges"[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "badges" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "description" text, "badgeable_type" varchar NOT NULL, "badgeable_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE INDEX "index_badges_on_badgeable" ON "badges" ("badgeable_type", "badgeable_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "categories"[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE TABLE "categories" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "noticed_events"[0m
+  [1m[35m (4.4ms)[0m  [1m[35mCREATE TABLE "noticed_events" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar, "record_type" varchar, "record_id" bigint, "params" json, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "notifications_count" integer)[0m
+  [1m[35m (19.4ms)[0m  [1m[35mCREATE INDEX "index_noticed_events_on_record" ON "noticed_events" ("record_type", "record_id")[0m
+  [1m[35m (1.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "noticed_notifications"[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "noticed_notifications" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar, "event_id" bigint NOT NULL, "recipient_type" varchar NOT NULL, "recipient_id" bigint NOT NULL, "read_at" datetime, "seen_at" datetime, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE INDEX "index_noticed_notifications_on_event_id" ON "noticed_notifications" ("event_id")[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE INDEX "index_noticed_notifications_on_recipient" ON "noticed_notifications" ("recipient_type", "recipient_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "plans"[0m
+  [1m[35m (6.8ms)[0m  [1m[35mCREATE TABLE "plans" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "price" decimal(10,2), "duration" varchar, "features" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "review_campaigns"[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE TABLE "review_campaigns" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar, "start_date" datetime(6), "end_date" datetime(6), "created_by_id" integer, "updated_by_id" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE INDEX "index_review_campaigns_on_solar_company_id" ON "review_campaigns" ("solar_company_id")[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE INDEX "index_review_campaigns_on_user_id" ON "review_campaigns" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "saas_access_managements"[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "saas_access_managements" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "access_level" varchar DEFAULT 'read' NOT NULL, "status" varchar DEFAULT 'pending' NOT NULL, "notes" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE INDEX "index_saas_access_managements_on_user_id" ON "saas_access_managements" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "saas_members"[0m
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE TABLE "saas_members" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "plan_id" integer NOT NULL, "subscription_status" varchar DEFAULT 'pending' NOT NULL, "billing_amount" decimal(10,2), "billing_date" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE INDEX "index_saas_members_on_plan_id" ON "saas_members" ("plan_id")[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE INDEX "index_saas_members_on_user_id" ON "saas_members" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "saas_sponsoreds"[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE TABLE "saas_sponsoreds" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "solar_company_id" integer NOT NULL, "start_date" datetime(6), "end_date" datetime(6), "budget" decimal(10,2), "created_by_id" integer, "updated_by_id" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE INDEX "index_saas_sponsoreds_on_solar_company_id" ON "saas_sponsoreds" ("solar_company_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "solar_companies"[0m
+  [1m[35m (2.3ms)[0m  [1m[35mCREATE TABLE "solar_companies" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "location" varchar, "installed_capacity_mw" decimal(10,2), "user_id" integer NOT NULL, "status" varchar, "created_by_id" integer, "updated_by_id" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE INDEX "index_solar_companies_on_user_id" ON "solar_companies" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "solar_contents"[0m
+  [1m[35m (2.5ms)[0m  [1m[35mCREATE TABLE "solar_contents" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar, "content_type" varchar, "body" text, "category_id" integer, "created_by_id" integer, "updated_by_id" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (2.3ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_category_id" ON "solar_contents" ("category_id")[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_solar_company_id" ON "solar_contents" ("solar_company_id")[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_user_id" ON "solar_contents" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "solar_reviews"[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE TABLE "solar_reviews" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "rating" integer, "comment" text, "status" varchar, "review_campaign_id" integer, "created_by_id" integer, "updated_by_id" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (2.6ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_review_campaign_id" ON "solar_reviews" ("review_campaign_id")[0m
+  [1m[35m (2.6ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_solar_company_id" ON "solar_reviews" ("solar_company_id")[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_user_id" ON "solar_reviews" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "solar_users"[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE TABLE "solar_users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar, "reset_password_sent_at" datetime(6), "remember_created_at" datetime(6), "name" varchar, "role" integer DEFAULT 0, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "created_by_id" integer, "updated_by_id" integer)[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_solar_users_on_email" ON "solar_users" ("email")[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_solar_users_on_reset_password_token" ON "solar_users" ("reset_password_token")[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aactive_storage_attachments" ("id" integer NOT NULL PRIMARY KEY, "name" varchar NOT NULL, "record_type" varchar NOT NULL, "record_id" integer NOT NULL, "blob_id" integer NOT NULL, "created_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "tindex_aactive_storage_attachments_uniqueness" ON "aactive_storage_attachments" ("record_type", "record_id", "name", "blob_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aactive_storage_attachments_on_blob_id" ON "aactive_storage_attachments" ("blob_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aactive_storage_attachments" ("id","name","record_type","record_id","blob_id","created_at")
+                     SELECT "id","name","record_type","record_id","blob_id","created_at" FROM "active_storage_attachments"[0m
+  [1m[35m (1.3ms)[0m  [1m[35mDROP TABLE "active_storage_attachments"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "active_storage_attachments" ("id" integer NOT NULL PRIMARY KEY, "name" varchar NOT NULL, "record_type" varchar NOT NULL, "record_id" integer NOT NULL, "blob_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_c3b3935057"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_active_storage_attachments_on_blob_id" ON "active_storage_attachments" ("blob_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_attachments_uniqueness" ON "active_storage_attachments" ("record_type", "record_id", "name", "blob_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "active_storage_attachments" ("id","name","record_type","record_id","blob_id","created_at")
+                     SELECT "id","name","record_type","record_id","blob_id","created_at" FROM "aactive_storage_attachments"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "aactive_storage_attachments"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.4ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aactive_storage_variant_records" ("id" integer NOT NULL PRIMARY KEY, "blob_id" integer NOT NULL, "variation_digest" varchar NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "tindex_aactive_storage_variant_records_uniqueness" ON "aactive_storage_variant_records" ("blob_id", "variation_digest")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aactive_storage_variant_records" ("id","blob_id","variation_digest")
+                     SELECT "id","blob_id","variation_digest" FROM "active_storage_variant_records"[0m
+  [1m[35m (0.9ms)[0m  [1m[35mDROP TABLE "active_storage_variant_records"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "active_storage_variant_records" ("id" integer NOT NULL PRIMARY KEY, "blob_id" integer NOT NULL, "variation_digest" varchar NOT NULL, CONSTRAINT "fk_rails_993965df05"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_variant_records_uniqueness" ON "active_storage_variant_records" ("blob_id", "variation_digest")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "active_storage_variant_records" ("id","blob_id","variation_digest")
+                     SELECT "id","blob_id","variation_digest" FROM "aactive_storage_variant_records"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "aactive_storage_variant_records"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (3.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "areview_campaigns" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "start_date" datetime(6) DEFAULT NULL, "end_date" datetime(6) DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_areview_campaigns_on_user_id" ON "areview_campaigns" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_areview_campaigns_on_solar_company_id" ON "areview_campaigns" ("solar_company_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "areview_campaigns" ("id","solar_company_id","user_id","title","start_date","end_date","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","start_date","end_date","created_by_id","updated_by_id","created_at","updated_at" FROM "review_campaigns"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mDROP TABLE "review_campaigns"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "review_campaigns" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "start_date" datetime(6) DEFAULT NULL, "end_date" datetime(6) DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_cc0879f666"
+FOREIGN KEY ("solar_company_id")
+  REFERENCES "solar_companies" ("id")
+)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_review_campaigns_on_solar_company_id" ON "review_campaigns" ("solar_company_id")[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE INDEX "index_review_campaigns_on_user_id" ON "review_campaigns" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "review_campaigns" ("id","solar_company_id","user_id","title","start_date","end_date","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","start_date","end_date","created_by_id","updated_by_id","created_at","updated_at" FROM "areview_campaigns"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "areview_campaigns"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (6.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "areview_campaigns" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "start_date" datetime(6) DEFAULT NULL, "end_date" datetime(6) DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_areview_campaigns_on_user_id" ON "areview_campaigns" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_areview_campaigns_on_solar_company_id" ON "areview_campaigns" ("solar_company_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "areview_campaigns" ("id","solar_company_id","user_id","title","start_date","end_date","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","start_date","end_date","created_by_id","updated_by_id","created_at","updated_at" FROM "review_campaigns"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mDROP TABLE "review_campaigns"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "review_campaigns" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "start_date" datetime(6) DEFAULT NULL, "end_date" datetime(6) DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_cc0879f666"
+FOREIGN KEY ("solar_company_id")
+  REFERENCES "solar_companies" ("id")
+, CONSTRAINT "fk_rails_9da6856e17"
+FOREIGN KEY ("user_id")
+  REFERENCES "solar_users" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_review_campaigns_on_solar_company_id" ON "review_campaigns" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_review_campaigns_on_user_id" ON "review_campaigns" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "review_campaigns" ("id","solar_company_id","user_id","title","start_date","end_date","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","start_date","end_date","created_by_id","updated_by_id","created_at","updated_at" FROM "areview_campaigns"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "areview_campaigns"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asaas_access_managements" ("id" integer NOT NULL PRIMARY KEY, "user_id" integer NOT NULL, "access_level" varchar DEFAULT 'read' NOT NULL, "status" varchar DEFAULT 'pending' NOT NULL, "notes" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_asaas_access_managements_on_user_id" ON "asaas_access_managements" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asaas_access_managements" ("id","user_id","access_level","status","notes","created_at","updated_at")
+                     SELECT "id","user_id","access_level","status","notes","created_at","updated_at" FROM "saas_access_managements"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mDROP TABLE "saas_access_managements"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "saas_access_managements" ("id" integer NOT NULL PRIMARY KEY, "user_id" integer NOT NULL, "access_level" varchar DEFAULT 'read' NOT NULL, "status" varchar DEFAULT 'pending' NOT NULL, "notes" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_e070a5143c"
+FOREIGN KEY ("user_id")
+  REFERENCES "solar_users" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_saas_access_managements_on_user_id" ON "saas_access_managements" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "saas_access_managements" ("id","user_id","access_level","status","notes","created_at","updated_at")
+                     SELECT "id","user_id","access_level","status","notes","created_at","updated_at" FROM "asaas_access_managements"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "asaas_access_managements"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asaas_members" ("id" integer NOT NULL PRIMARY KEY, "user_id" integer NOT NULL, "plan_id" integer NOT NULL, "subscription_status" varchar DEFAULT 'pending' NOT NULL, "billing_amount" decimal(10,2) DEFAULT NULL, "billing_date" datetime(6) DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asaas_members_on_user_id" ON "asaas_members" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asaas_members_on_plan_id" ON "asaas_members" ("plan_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asaas_members" ("id","user_id","plan_id","subscription_status","billing_amount","billing_date","created_at","updated_at")
+                     SELECT "id","user_id","plan_id","subscription_status","billing_amount","billing_date","created_at","updated_at" FROM "saas_members"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE "saas_members"[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "saas_members" ("id" integer NOT NULL PRIMARY KEY, "user_id" integer NOT NULL, "plan_id" integer NOT NULL, "subscription_status" varchar DEFAULT 'pending' NOT NULL, "billing_amount" decimal(10,2) DEFAULT NULL, "billing_date" datetime(6) DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_040974738a"
+FOREIGN KEY ("plan_id")
+  REFERENCES "plans" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_saas_members_on_plan_id" ON "saas_members" ("plan_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_saas_members_on_user_id" ON "saas_members" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "saas_members" ("id","user_id","plan_id","subscription_status","billing_amount","billing_date","created_at","updated_at")
+                     SELECT "id","user_id","plan_id","subscription_status","billing_amount","billing_date","created_at","updated_at" FROM "asaas_members"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "asaas_members"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (2.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asaas_members" ("id" integer NOT NULL PRIMARY KEY, "user_id" integer NOT NULL, "plan_id" integer NOT NULL, "subscription_status" varchar DEFAULT 'pending' NOT NULL, "billing_amount" decimal(10,2) DEFAULT NULL, "billing_date" datetime(6) DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asaas_members_on_user_id" ON "asaas_members" ("user_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "tindex_asaas_members_on_plan_id" ON "asaas_members" ("plan_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "asaas_members" ("id","user_id","plan_id","subscription_status","billing_amount","billing_date","created_at","updated_at")
+                     SELECT "id","user_id","plan_id","subscription_status","billing_amount","billing_date","created_at","updated_at" FROM "saas_members"[0m
+  [1m[35m (1.0ms)[0m  [1m[35mDROP TABLE "saas_members"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "saas_members" ("id" integer NOT NULL PRIMARY KEY, "user_id" integer NOT NULL, "plan_id" integer NOT NULL, "subscription_status" varchar DEFAULT 'pending' NOT NULL, "billing_amount" decimal(10,2) DEFAULT NULL, "billing_date" datetime(6) DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_040974738a"
+FOREIGN KEY ("plan_id")
+  REFERENCES "plans" ("id")
+, CONSTRAINT "fk_rails_a932a14ab1"
+FOREIGN KEY ("user_id")
+  REFERENCES "solar_users" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_saas_members_on_plan_id" ON "saas_members" ("plan_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_saas_members_on_user_id" ON "saas_members" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "saas_members" ("id","user_id","plan_id","subscription_status","billing_amount","billing_date","created_at","updated_at")
+                     SELECT "id","user_id","plan_id","subscription_status","billing_amount","billing_date","created_at","updated_at" FROM "asaas_members"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "asaas_members"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (8.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asaas_sponsoreds" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "start_date" datetime(6) DEFAULT NULL, "end_date" datetime(6) DEFAULT NULL, "budget" decimal(10,2) DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "tindex_asaas_sponsoreds_on_solar_company_id" ON "asaas_sponsoreds" ("solar_company_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asaas_sponsoreds" ("id","solar_company_id","start_date","end_date","budget","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","start_date","end_date","budget","created_by_id","updated_by_id","created_at","updated_at" FROM "saas_sponsoreds"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE "saas_sponsoreds"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "saas_sponsoreds" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "start_date" datetime(6) DEFAULT NULL, "end_date" datetime(6) DEFAULT NULL, "budget" decimal(10,2) DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_8a6fdf7c34"
+FOREIGN KEY ("solar_company_id")
+  REFERENCES "solar_companies" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_saas_sponsoreds_on_solar_company_id" ON "saas_sponsoreds" ("solar_company_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "saas_sponsoreds" ("id","solar_company_id","start_date","end_date","budget","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","start_date","end_date","budget","created_by_id","updated_by_id","created_at","updated_at" FROM "asaas_sponsoreds"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "asaas_sponsoreds"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asolar_companies" ("id" integer NOT NULL PRIMARY KEY, "name" varchar DEFAULT NULL, "location" varchar DEFAULT NULL, "installed_capacity_mw" decimal(10,2) DEFAULT NULL, "user_id" integer NOT NULL, "status" varchar DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_companies_on_user_id" ON "asolar_companies" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asolar_companies" ("id","name","location","installed_capacity_mw","user_id","status","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","name","location","installed_capacity_mw","user_id","status","created_by_id","updated_by_id","created_at","updated_at" FROM "solar_companies"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE "solar_companies"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "solar_companies" ("id" integer NOT NULL PRIMARY KEY, "name" varchar DEFAULT NULL, "location" varchar DEFAULT NULL, "installed_capacity_mw" decimal(10,2) DEFAULT NULL, "user_id" integer NOT NULL, "status" varchar DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_15a51ff69f"
+FOREIGN KEY ("user_id")
+  REFERENCES "solar_users" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_solar_companies_on_user_id" ON "solar_companies" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "solar_companies" ("id","name","location","installed_capacity_mw","user_id","status","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","name","location","installed_capacity_mw","user_id","status","created_by_id","updated_by_id","created_at","updated_at" FROM "asolar_companies"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "asolar_companies"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (3.5ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asolar_contents" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "content_type" varchar DEFAULT NULL, "body" text DEFAULT NULL, "category_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_contents_on_user_id" ON "asolar_contents" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_contents_on_solar_company_id" ON "asolar_contents" ("solar_company_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_contents_on_category_id" ON "asolar_contents" ("category_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asolar_contents" ("id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at" FROM "solar_contents"[0m
+  [1m[35m (0.6ms)[0m  [1m[35mDROP TABLE "solar_contents"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "solar_contents" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "content_type" varchar DEFAULT NULL, "body" text DEFAULT NULL, "category_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_41015110cd"
+FOREIGN KEY ("category_id")
+  REFERENCES "categories" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_category_id" ON "solar_contents" ("category_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_solar_company_id" ON "solar_contents" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_user_id" ON "solar_contents" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "solar_contents" ("id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at" FROM "asolar_contents"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "asolar_contents"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asolar_contents" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "content_type" varchar DEFAULT NULL, "body" text DEFAULT NULL, "category_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_contents_on_user_id" ON "asolar_contents" ("user_id")[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_contents_on_solar_company_id" ON "asolar_contents" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_contents_on_category_id" ON "asolar_contents" ("category_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asolar_contents" ("id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at" FROM "solar_contents"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mDROP TABLE "solar_contents"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "solar_contents" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "content_type" varchar DEFAULT NULL, "body" text DEFAULT NULL, "category_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_41015110cd"
+FOREIGN KEY ("category_id")
+  REFERENCES "categories" ("id")
+, CONSTRAINT "fk_rails_cbc662b761"
+FOREIGN KEY ("solar_company_id")
+  REFERENCES "solar_companies" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_category_id" ON "solar_contents" ("category_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_solar_company_id" ON "solar_contents" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_user_id" ON "solar_contents" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "solar_contents" ("id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at" FROM "asolar_contents"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "asolar_contents"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (3.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asolar_contents" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "content_type" varchar DEFAULT NULL, "body" text DEFAULT NULL, "category_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_contents_on_user_id" ON "asolar_contents" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_contents_on_solar_company_id" ON "asolar_contents" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_contents_on_category_id" ON "asolar_contents" ("category_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asolar_contents" ("id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at" FROM "solar_contents"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE "solar_contents"[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "solar_contents" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "title" varchar DEFAULT NULL, "content_type" varchar DEFAULT NULL, "body" text DEFAULT NULL, "category_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_cbc662b761"
+FOREIGN KEY ("solar_company_id")
+  REFERENCES "solar_companies" ("id")
+, CONSTRAINT "fk_rails_41015110cd"
+FOREIGN KEY ("category_id")
+  REFERENCES "categories" ("id")
+, CONSTRAINT "fk_rails_56dd9dfb59"
+FOREIGN KEY ("user_id")
+  REFERENCES "solar_users" ("id")
+)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_category_id" ON "solar_contents" ("category_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_solar_company_id" ON "solar_contents" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_contents_on_user_id" ON "solar_contents" ("user_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[32mINSERT INTO "solar_contents" ("id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","title","content_type","body","category_id","created_by_id","updated_by_id","created_at","updated_at" FROM "asolar_contents"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "asolar_contents"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asolar_reviews" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "rating" integer DEFAULT NULL, "comment" text DEFAULT NULL, "status" varchar DEFAULT NULL, "review_campaign_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_reviews_on_user_id" ON "asolar_reviews" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_reviews_on_solar_company_id" ON "asolar_reviews" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_reviews_on_review_campaign_id" ON "asolar_reviews" ("review_campaign_id")[0m
+  [1m[35m (3.5ms)[0m  [1m[32mINSERT INTO "asolar_reviews" ("id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at" FROM "solar_reviews"[0m
+  [1m[35m (5.1ms)[0m  [1m[35mDROP TABLE "solar_reviews"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "solar_reviews" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "rating" integer DEFAULT NULL, "comment" text DEFAULT NULL, "status" varchar DEFAULT NULL, "review_campaign_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_2cb2003bb2"
+FOREIGN KEY ("review_campaign_id")
+  REFERENCES "review_campaigns" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_review_campaign_id" ON "solar_reviews" ("review_campaign_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_solar_company_id" ON "solar_reviews" ("solar_company_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_user_id" ON "solar_reviews" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "solar_reviews" ("id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at" FROM "asolar_reviews"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "asolar_reviews"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asolar_reviews" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "rating" integer DEFAULT NULL, "comment" text DEFAULT NULL, "status" varchar DEFAULT NULL, "review_campaign_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_reviews_on_user_id" ON "asolar_reviews" ("user_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_reviews_on_solar_company_id" ON "asolar_reviews" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_reviews_on_review_campaign_id" ON "asolar_reviews" ("review_campaign_id")[0m
+  [1m[35m (4.0ms)[0m  [1m[32mINSERT INTO "asolar_reviews" ("id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at" FROM "solar_reviews"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE "solar_reviews"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "solar_reviews" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "rating" integer DEFAULT NULL, "comment" text DEFAULT NULL, "status" varchar DEFAULT NULL, "review_campaign_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_2cb2003bb2"
+FOREIGN KEY ("review_campaign_id")
+  REFERENCES "review_campaigns" ("id")
+, CONSTRAINT "fk_rails_103ff5ab67"
+FOREIGN KEY ("solar_company_id")
+  REFERENCES "solar_companies" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_review_campaign_id" ON "solar_reviews" ("review_campaign_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_solar_company_id" ON "solar_reviews" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_user_id" ON "solar_reviews" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "solar_reviews" ("id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at" FROM "asolar_reviews"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "asolar_reviews"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asolar_reviews" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "rating" integer DEFAULT NULL, "comment" text DEFAULT NULL, "status" varchar DEFAULT NULL, "review_campaign_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_reviews_on_user_id" ON "asolar_reviews" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_reviews_on_solar_company_id" ON "asolar_reviews" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_asolar_reviews_on_review_campaign_id" ON "asolar_reviews" ("review_campaign_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asolar_reviews" ("id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at" FROM "solar_reviews"[0m
+  [1m[35m (0.9ms)[0m  [1m[35mDROP TABLE "solar_reviews"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "solar_reviews" ("id" integer NOT NULL PRIMARY KEY, "solar_company_id" integer NOT NULL, "user_id" integer NOT NULL, "rating" integer DEFAULT NULL, "comment" text DEFAULT NULL, "status" varchar DEFAULT NULL, "review_campaign_id" integer DEFAULT NULL, "created_by_id" integer DEFAULT NULL, "updated_by_id" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_103ff5ab67"
+FOREIGN KEY ("solar_company_id")
+  REFERENCES "solar_companies" ("id")
+, CONSTRAINT "fk_rails_2cb2003bb2"
+FOREIGN KEY ("review_campaign_id")
+  REFERENCES "review_campaigns" ("id")
+, CONSTRAINT "fk_rails_4640305f87"
+FOREIGN KEY ("user_id")
+  REFERENCES "solar_users" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_review_campaign_id" ON "solar_reviews" ("review_campaign_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_solar_company_id" ON "solar_reviews" ("solar_company_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_solar_reviews_on_user_id" ON "solar_reviews" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "solar_reviews" ("id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at")
+                     SELECT "id","solar_company_id","user_id","rating","comment","status","review_campaign_id","created_by_id","updated_by_id","created_at","updated_at" FROM "asolar_reviews"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "asolar_reviews"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (1.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20250713030239)[0m
+  [1m[35m (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20250712181448),
+(20250712181716),
+(20250713011643),
+(20250713011828),
+(20250713012046),
+(20250713012156),
+(20250713012254),
+(20250713012439),
+(20250713012544),
+(20250713012714),
+(20250713012800),
+(20250713013324),
+(20250713023455),
+(20250713023456),
+(20250713024910),
+(20250713025028);
+
+[0m
+  [1m[35m (3.4ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "test"], ["created_at", "2025-07-13 03:07:53.947194"], ["updated_at", "2025-07-13 03:07:53.947194"]]
+  [1m[36mTRANSACTION (42.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.7ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.5ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "schema_sha1"], ["value", "918800e7856e80a91ea08f0e130f70e56d16fd35"], ["created_at", "2025-07-13 03:07:53.996527"], ["updated_at", "2025-07-13 03:07:53.996527"]]
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mAdminUser Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "admin_users" WHERE "admin_users"."email" = ? LIMIT ?[0m  [["email", "admin_8a5b5db8@example.com"], ["LIMIT", 1]]
+  [1m[36mAdminUser Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "admin_users" WHERE "admin_users"."email" = ? LIMIT ?[0m  [["email", "admin_8a5b5db8@example.com"], ["LIMIT", 1]]
+  [1m[36mAdminUser Create (0.6ms)[0m  [1m[32mINSERT INTO "admin_users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?)[0m  [["email", "admin_8a5b5db8@example.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2025-07-13 03:12:06.293328"], ["updated_at", "2025-07-13 03:12:06.293328"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mAdminUser Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "admin_users" WHERE "admin_users"."email" = ? LIMIT ?[0m  [["email", "admin_c092a905@example.com"], ["LIMIT", 1]]
+  [1m[36mAdminUser Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "admin_users" WHERE "admin_users"."email" = ? LIMIT ?[0m  [["email", "admin_c092a905@example.com"], ["LIMIT", 1]]
+  [1m[36mAdminUser Create (0.4ms)[0m  [1m[32mINSERT INTO "admin_users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?)[0m  [["email", "admin_c092a905@example.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2025-07-13 03:12:06.300766"], ["updated_at", "2025-07-13 03:12:06.300766"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mAdminUser Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "admin_users" WHERE "admin_users"."email" = ? LIMIT ?[0m  [["email", "admin_5d497fd9@example.com"], ["LIMIT", 1]]
+  [1m[36mAdminUser Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "admin_users" WHERE "admin_users"."email" = ? LIMIT ?[0m  [["email", "admin_5d497fd9@example.com"], ["LIMIT", 1]]
+  [1m[36mAdminUser Create (0.5ms)[0m  [1m[32mINSERT INTO "admin_users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?)[0m  [["email", "admin_5d497fd9@example.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2025-07-13 03:12:38.802323"], ["updated_at", "2025-07-13 03:12:38.802323"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/admin/saas_access_managements" for 127.0.0.1 at 2025-07-13 00:12:38 -0300
+Processing by Admin::SaasAccessManagementsController#index as HTML
+Completed 401 Unauthorized in 7ms (ActiveRecord: 0.0ms | Allocations: 1501)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mAdminUser Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "admin_users" WHERE "admin_users"."email" = ? LIMIT ?[0m  [["email", "admin_ab04effd@example.com"], ["LIMIT", 1]]
+  [1m[36mAdminUser Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "admin_users" WHERE "admin_users"."email" = ? LIMIT ?[0m  [["email", "admin_ab04effd@example.com"], ["LIMIT", 1]]
+  [1m[36mAdminUser Create (0.4ms)[0m  [1m[32mINSERT INTO "admin_users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?)[0m  [["email", "admin_ab04effd@example.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2025-07-13 03:12:38.963125"], ["updated_at", "2025-07-13 03:12:38.963125"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/admin/saas_access_management" for 127.0.0.1 at 2025-07-13 00:12:38 -0300
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mrollback transaction[0m

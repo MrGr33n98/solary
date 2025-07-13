@@ -1,0 +1,26 @@
+<div class="paginated_collection">
+  <table class="index_table index">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Plan</th>
+        <th>Subscription Status</th>
+        <th>Billing Amount</th>
+        <th>Billing Date</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% saas_members.each do |member| %>
+        <tr>
+          <td><%= member.user.email %></td>
+          <td><%= member.plan.name %></td>
+          <td><%= member.subscription_status %></td>
+          <td><%= number_to_currency(member.billing_amount) %></td>
+          <td><%= member.billing_date %></td>
+          <td><%= member.created_at %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

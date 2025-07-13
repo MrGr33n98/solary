@@ -10,17 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_08_205200) do
-  create_table "action_text_rich_texts", force: :cascade do |t|
-    t.string "name", null: false
-    t.text "body"
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
-  end
-
+ActiveRecord::Schema[7.0].define(version: 2025_07_13_210009) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -51,7 +41,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_08_205200) do
     t.string "content_type"
     t.text "metadata"
     t.string "service_name", null: false
-    t.integer "byte_size", null: false
+    t.bigint "byte_size", null: false
     t.string "checksum"
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
@@ -75,13 +65,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_08_205200) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
-  create_table "comments", force: :cascade do |t|
-    t.integer "post_id", null: false
-    t.integer "user_id", null: false
+  create_table "badges", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "badgeable_type", null: false
+    t.integer "badgeable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["post_id"], name: "index_comments_on_post_id"
-    t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["badgeable_type", "badgeable_id"], name: "index_badges_on_badgeable"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "noticed_events", force: :cascade do |t|
@@ -108,34 +105,140 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_08_205200) do
     t.index ["recipient_type", "recipient_id"], name: "index_noticed_notifications_on_recipient"
   end
 
-  create_table "posts", force: :cascade do |t|
-    t.string "title"
-    t.text "body"
+  create_table "plans", force: :cascade do |t|
+    t.string "name"
+    t.decimal "price", precision: 10, scale: 2
+    t.string "duration"
+    t.text "features"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "views", default: 0
-    t.integer "user_id", null: false
-    t.datetime "published_at"
-    t.index ["user_id"], name: "index_posts_on_user_id"
+    t.boolean "active"
+    t.text "description"
+    t.integer "duration_months"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "review_campaigns", force: :cascade do |t|
+    t.integer "solar_company_id", null: false
+    t.integer "user_id", null: false
+    t.string "title"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["solar_company_id"], name: "index_review_campaigns_on_solar_company_id"
+    t.index ["user_id"], name: "index_review_campaigns_on_user_id"
+  end
+
+  create_table "saas_access_managements", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "access_level", default: "read", null: false
+    t.string "status", default: "pending", null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_saas_access_managements_on_user_id"
+  end
+
+  create_table "saas_members", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "plan_id", null: false
+    t.string "subscription_status", default: "pending", null: false
+    t.decimal "billing_amount", precision: 10, scale: 2
+    t.datetime "billing_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["plan_id"], name: "index_saas_members_on_plan_id"
+    t.index ["user_id"], name: "index_saas_members_on_user_id"
+  end
+
+  create_table "saas_sponsoreds", force: :cascade do |t|
+    t.integer "solar_company_id", null: false
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.decimal "budget", precision: 10, scale: 2
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["solar_company_id"], name: "index_saas_sponsoreds_on_solar_company_id"
+  end
+
+  create_table "solar_companies", force: :cascade do |t|
+    t.string "name"
+    t.string "location"
+    t.decimal "installed_capacity_mw", precision: 10, scale: 2
+    t.integer "user_id", null: false
+    t.string "status"
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_solar_companies_on_user_id"
+  end
+
+  create_table "solar_contents", force: :cascade do |t|
+    t.integer "solar_company_id", null: false
+    t.integer "user_id", null: false
+    t.string "title"
+    t.string "content_type"
+    t.text "body"
+    t.integer "category_id"
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_solar_contents_on_category_id"
+    t.index ["solar_company_id"], name: "index_solar_contents_on_solar_company_id"
+    t.index ["user_id"], name: "index_solar_contents_on_user_id"
+  end
+
+  create_table "solar_reviews", force: :cascade do |t|
+    t.integer "solar_company_id", null: false
+    t.integer "user_id", null: false
+    t.integer "rating"
+    t.text "comment"
+    t.string "status"
+    t.integer "review_campaign_id"
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["review_campaign_id"], name: "index_solar_reviews_on_review_campaign_id"
+    t.index ["solar_company_id"], name: "index_solar_reviews_on_solar_company_id"
+    t.index ["user_id"], name: "index_solar_reviews_on_user_id"
+  end
+
+  create_table "solar_users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.string "name"
+    t.integer "role", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name"
-    t.integer "views", default: 0
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.index ["email"], name: "index_solar_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_solar_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "comments", "posts"
-  add_foreign_key "comments", "users"
-  add_foreign_key "posts", "users"
+  add_foreign_key "review_campaigns", "solar_companies"
+  add_foreign_key "review_campaigns", "solar_users", column: "user_id"
+  add_foreign_key "saas_access_managements", "solar_users", column: "user_id"
+  add_foreign_key "saas_members", "plans"
+  add_foreign_key "saas_members", "solar_users", column: "user_id"
+  add_foreign_key "saas_sponsoreds", "solar_companies"
+  add_foreign_key "solar_companies", "solar_users", column: "user_id"
+  add_foreign_key "solar_contents", "categories"
+  add_foreign_key "solar_contents", "solar_companies"
+  add_foreign_key "solar_contents", "solar_users", column: "user_id"
+  add_foreign_key "solar_reviews", "review_campaigns"
+  add_foreign_key "solar_reviews", "solar_companies"
+  add_foreign_key "solar_reviews", "solar_users", column: "user_id"
 end

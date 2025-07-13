@@ -1,10 +1,10 @@
 class CommentsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_solar_user!
   before_action :set_post
 
   def create
     @comment = @post.comments.new(comment_params)
-    @comment.user = current_user
+    @comment.solar_user = current_solar_user
 
     if curse_word_found?(@comment.body.to_plain_text)
       flash[:alert] = 'Your comment contains inappropriate language and cannot be saved.'

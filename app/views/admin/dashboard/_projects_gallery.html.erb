@@ -1,0 +1,10 @@
+<h3>Project Gallery</h3>
+<% if company.photos.attached? %>
+  <div class="project-photos">
+    <% company.photos.each do |photo| %>
+      <%= image_tag url_for(photo), size: "200x200" %>
+    <% end %>
+  </div>
+<% else %>
+  <p>No project photos available.</p>
+<% end %>

@@ -18,7 +18,7 @@ Devise.setup do |config|
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
-  # config.parent_controller = 'DeviseController'
+    config.parent_controller = 'ApplicationController'
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
@@ -46,7 +46,7 @@ Devise.setup do |config|
   # session. If you need permissions, you should implement that in a before filter.
   # You can also supply a hash where the value is a boolean determining whether
   # or not authentication should be aborted when the value is not present.
-  # config.authentication_keys = [:email]
+  config.authentication_keys = [:email]
 
   # Configure parameters from the request object used for authentication. Each entry
   # given should be a request method and it will automatically be passed to the
@@ -248,25 +248,14 @@ Devise.setup do |config|
 
   # Configure the default scope given to Warden. By default it's the first
   # devise role declared in your routes (usually :user).
-  # config.default_scope = :user
-
-  # Set this configuration to false if you want /users/sign_out to sign out
-  # only the current scope. By default, Devise signs out all scopes.
-  # config.sign_out_all_scopes = true
-
-  # ==> Navigation configuration
-  # Lists the formats that should be treated as navigational. Formats like
-  # :html should redirect to the sign in page when the user does not have
-  # access, but formats like :xml or :json, should return 401.
-  #
-  # If you have any extra navigational formats, like :iphone or :mobile, you
-  # should add them to the navigational formats lists.
-  #
-  # The "*/*" below is required to match Internet Explorer requests.
-  # config.navigational_formats = ['*/*', :html, :turbo_stream]
-
-  # The default HTTP method used to sign out a resource. Default is :delete.
+    config.scoped_views = true
+  config.default_scope = :solar_user
   config.sign_out_via = :delete
+  config.router_name = :main_app
+  config.omniauth_path_prefix = '/solar_users/auth'
+
+  # Explicitly define Devise mappings
+  
 
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting

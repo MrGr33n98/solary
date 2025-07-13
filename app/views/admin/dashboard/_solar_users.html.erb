@@ -1,0 +1,22 @@
+<div class="paginated_collection">
+  <table class="index_table index">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% solar_users.each do |user| %>
+        <tr>
+          <td><%= user.email %></td>
+          <td><%= user.name %></td>
+          <td><%= user.role %></td>
+          <td><%= user.created_at %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

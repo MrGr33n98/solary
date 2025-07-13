@@ -1,0 +1,10 @@
+<h3>Recent Reviews</h3>
+<% if reviews.any? %>
+  <ul>
+    <% reviews.each do |review| %>
+      <li>Rating: <%= review.rating %>, Comment: <%= review.comment %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No reviews yet.</p>
+<% end %>

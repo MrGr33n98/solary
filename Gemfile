@@ -78,3 +78,7 @@ end
 gem "noticed", "= 2.2"
 gem 'activeadmin', '~> 3.2.0'
 gem 'sassc'
+gem 'cancancan'
+gem "rspec-rails", "~> 7.1", :groups => [:development, :test]
+
+gem "factory_bot_rails", "~> 6.5", :groups => [:development, :test]

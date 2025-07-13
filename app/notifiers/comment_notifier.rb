@@ -1,6 +1,6 @@
 # To deliver this notification:
 #
-# CommentNotifier.with(record: @post, message: "New post").deliver(User.all)
+# CommentNotifier.with(record: @post, message: "New post").deliver(SolarUser.all)
 
 class CommentNotifier < ApplicationNotifier
   # Add your delivery methods
@@ -30,7 +30,7 @@ class CommentNotifier < ApplicationNotifier
     # @post = CommentNotifier.find(id).params[:post]
     # @user = User.find((CommentNotifier.find(id).params[:post].user_id))
     @post = record.post
-    @user = record.user
+    @user = record.solar_user
     "#{@user.name} replied to #{@post.title.truncate(14)}"
   end
 

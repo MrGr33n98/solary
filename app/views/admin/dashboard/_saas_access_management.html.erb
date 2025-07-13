@@ -1,0 +1,16 @@
+<div class="card mt-6">
+  <h3 class="text-xl font-bold mb-4">Access Management</h3>
+  <table class="w-full">
+    <thead><tr><th>Solar User</th><th>Feature Group</th><th>Access Level</th><th>Actions</th></tr></thead>
+    <tbody>
+      <% saas_access_management_records.each do |a| %>
+        <tr>
+          <td><%= a.solar_user.email %></td>
+          <td><%= a.feature_group.name %></td>
+          <td><%= a.access_level %></td>
+          <td><%= link_to 'Grant Access', grant_access_admin_saas_access_management_path(a), method: :put %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
