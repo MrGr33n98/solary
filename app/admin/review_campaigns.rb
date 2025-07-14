@@ -1,4 +1,7 @@
 ActiveAdmin.register ReviewCampaign do
+  controller do
+    skip_authorization_check only: :index
+  end
   permit_params :solar_company_id, :user_id, :title, :start_date, :end_date
 
   index do

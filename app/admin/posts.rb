@@ -1,4 +1,7 @@
 ActiveAdmin.register Post do
+  controller do
+    skip_authorization_check only: :index
+  end
   permit_params :title, :body, :comment, :published_at, :user_id
 
   scope :all

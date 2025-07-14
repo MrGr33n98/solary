@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_13_210009) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_14_020216) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -81,6 +81,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_13_210009) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
   create_table "noticed_events", force: :cascade do |t|
     t.string "type"
     t.string "record_type"
@@ -115,6 +126,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_13_210009) do
     t.boolean "active"
     t.text "description"
     t.integer "duration_months"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
+    t.datetime "published_at"
+    t.integer "solar_user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["solar_user_id"], name: "index_posts_on_solar_user_id"
   end
 
   create_table "review_campaigns", force: :cascade do |t|
@@ -168,14 +189,45 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_13_210009) do
   create_table "solar_companies", force: :cascade do |t|
     t.string "name"
     t.string "location"
-    t.decimal "installed_capacity_mw", precision: 10, scale: 2
-    t.integer "user_id", null: false
-    t.string "status"
+    t.decimal "installed_capacity_mwp", precision: 10, scale: 2, null: false
+    t.string "status", default: "pending", null: false
     t.integer "created_by_id"
     t.integer "updated_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_solar_companies_on_user_id"
+    t.string "slug", null: false
+    t.string "cnpj", null: false
+    t.string "street_address", null: false
+    t.string "city", null: false
+    t.string "state", null: false
+    t.string "postal_code"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.string "contact_name", null: false
+    t.string "contact_email", null: false
+    t.string "contact_phone"
+    t.string "website"
+    t.string "facebook_url"
+    t.string "twitter_url"
+    t.string "linkedin_url"
+    t.date "commissioning_date"
+    t.string "module_technology"
+    t.string "module_brand"
+    t.integer "module_count"
+    t.string "inverter_brand"
+    t.string "inverter_model"
+    t.float "avg_rating", default: 0.0
+    t.integer "reviews_count", default: 0
+    t.decimal "total_energy_generated_mwh", precision: 12, scale: 2, default: "0.0"
+    t.string "meta_title"
+    t.string "meta_description"
+    t.string "meta_keywords"
+    t.datetime "deleted_at"
+    t.index ["cnpj"], name: "index_solar_companies_on_cnpj", unique: true
+    t.index ["created_by_id"], name: "index_solar_companies_on_created_by_id"
+    t.index ["deleted_at"], name: "index_solar_companies_on_deleted_at"
+    t.index ["slug"], name: "index_solar_companies_on_slug", unique: true
+    t.index ["updated_by_id"], name: "index_solar_companies_on_updated_by_id"
   end
 
   create_table "solar_contents", force: :cascade do |t|
@@ -228,13 +280,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_13_210009) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "posts", "solar_users"
   add_foreign_key "review_campaigns", "solar_companies"
   add_foreign_key "review_campaigns", "solar_users", column: "user_id"
   add_foreign_key "saas_access_managements", "solar_users", column: "user_id"
   add_foreign_key "saas_members", "plans"
   add_foreign_key "saas_members", "solar_users", column: "user_id"
   add_foreign_key "saas_sponsoreds", "solar_companies"
-  add_foreign_key "solar_companies", "solar_users", column: "user_id"
+  add_foreign_key "solar_companies", "solar_users", column: "created_by_id"
+  add_foreign_key "solar_companies", "solar_users", column: "updated_by_id"
   add_foreign_key "solar_contents", "categories"
   add_foreign_key "solar_contents", "solar_companies"
   add_foreign_key "solar_contents", "solar_users", column: "user_id"

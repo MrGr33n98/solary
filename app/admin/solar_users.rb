@@ -18,6 +18,7 @@ ActiveAdmin.register SolarUser do
     redirect_to admin_solar_users_path, notice: 'User promoted to admin successfully'
   end
   controller do
+    skip_authorization_check
     def scoped_collection
       if current_admin_user && current_admin_user.solar_user&.role == 'admin'
         super

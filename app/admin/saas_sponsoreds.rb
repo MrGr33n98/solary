@@ -1,4 +1,7 @@
 ActiveAdmin.register SaasSponsored do
+  controller do
+    skip_authorization_check only: :index
+  end
   permit_params :solar_company_id, :start_date, :end_date, :budget, :created_by_id, :updated_by_id
 
   index do

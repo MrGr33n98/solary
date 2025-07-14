@@ -9,6 +9,6 @@ class Badge < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["badgeable"]
+    []
   end
 end

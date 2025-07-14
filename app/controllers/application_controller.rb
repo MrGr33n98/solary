@@ -4,6 +4,13 @@ class ApplicationController < ActionController::Base
   
   before_action :authenticate_solar_user!
   before_action :set_unread_notifications
+  check_authorization unless: :devise_controller? || :active_admin_controller?
+
+  private
+
+  def active_admin_controller?
+    self.class.name.start_with?('Admin::')
+  end
 
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = "Acesso negado: #{exception.message}"

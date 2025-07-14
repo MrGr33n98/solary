@@ -1,4 +1,7 @@
 ActiveAdmin.register SolarContent do
+  controller do
+    skip_authorization_check only: :index
+  end
   permit_params :solar_company_id, :user_id, :title, :content_type, :body, :category_id
 
   index do

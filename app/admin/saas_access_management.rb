@@ -1,6 +1,9 @@
 ActiveAdmin.register SaasAccessManagement do
+  controller do
+    skip_authorization_check only: :index
+  end
   menu priority: 2, label: "Saas Access Management"
-  permit_params :user_id, :access_level, :status, :notes
+  permit_params :user_id, :plan, :status
 
   index do
     selectable_column
@@ -12,17 +15,16 @@ ActiveAdmin.register SaasAccessManagement do
     actions
   end
 
-  filter :user_id, as: :select, collection: SolarUser.all.map { |u| [u.email, u.id] }
+  filter :user_id, as: :select, collection: -> { SolarUser.all.map { |u| [u.email, u.id] } }
   filter :access_level
   filter :status
   filter :notes
 
   form do |f|
-    f.inputs "Saas Access Management" do
-      f.input :user_id, as: :select, collection: SolarUser.all.map { |u| [u.email, u.id] }
-      f.input :access_level, as: :select, collection: %w[read write admin]
-      f.input :status, as: :select, collection: %w[pending approved denied]
-      f.input :notes
+    f.inputs do
+      f.input :user_id, as: :select, collection: -> { SolarUser.all.map { |u| [u.name, u.id] } }
+      f.input :plan
+      f.input :status
     end
     f.actions
   end

@@ -1,4 +1,7 @@
 ActiveAdmin.register SaasMember do
+  controller do
+    skip_authorization_check only: :index
+  end
   permit_params :user_id, :plan_id, :subscription_status, :billing_amount, :billing_date
 
   filter :user

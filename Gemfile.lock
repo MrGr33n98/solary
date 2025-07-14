@@ -120,6 +120,8 @@ GEM
     formtastic (5.0.0)
       actionpack (>= 6.0.0)
     formtastic_i18n (0.7.0)
+    friendly_id (5.5.1)
+      activerecord (>= 4.0.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
     has_scope (0.8.2)
@@ -196,6 +198,8 @@ GEM
     public_suffix (5.0.1)
     puma (5.6.6)
       nio4r (~> 2.0)
+    pundit (2.5.0)
+      activesupport (>= 3.0.0)
     racc (1.7.1)
     rack (2.2.7)
     rack-test (2.1.0)
@@ -317,12 +321,14 @@ DEPENDENCIES
   debug
   devise
   factory_bot_rails (~> 6.5)
+  friendly_id (~> 5.4)
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
   noticed (= 2.2)
   pg
   puma (~> 5.0)
+  pundit
   rails (~> 7.0.6)
   rspec-rails (~> 7.1)
   sassc

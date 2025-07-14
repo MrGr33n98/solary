@@ -1,6 +1,6 @@
 class ReviewCampaign < ApplicationRecord
   belongs_to :solar_company
-  belongs_to :solar_user, optional: true
+  belongs_to :user
 
   validates :title, presence: true
   validates :start_date, presence: true
@@ -12,11 +12,11 @@ class ReviewCampaign < ApplicationRecord
   scope :expired, -> { where('end_date < ?', Time.current) }
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[solar_company_id solar_user_id title start_date end_date]
+    %w[solar_company_id user_id title start_date end_date]
   end
 
   def self.ransackable_associations(_auth_object = nil)
-    ['solar_company', 'solar_user']
+    ['solar_company', 'user']
   end
 
   private

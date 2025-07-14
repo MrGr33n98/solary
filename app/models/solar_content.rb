@@ -1,6 +1,6 @@
 class SolarContent < ApplicationRecord
   belongs_to :solar_company
-  belongs_to :solar_user, optional: true
+  belongs_to :user
   belongs_to :category, optional: true
 
   validates :title, presence: true
@@ -12,21 +12,17 @@ class SolarContent < ApplicationRecord
   scope :by_type, ->(type) { where(content_type: type) }
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[solar_company_id solar_user_id title content_type body category_id]
+    %w[solar_company_id user_id title content_type body category_id]
   end
 
   def self.ransackable_associations(_auth_object = nil)
-    ['solar_company', 'solar_user', 'category']
+    ['solar_company', 'user', 'category']
   end
 
   private
 
   def no_curse_words
-    errors.add(:body, 'contains inappropriate language') if curse_word_found?(body)
-  end
-
-  def curse_word_found?(text)
-    CURSE_WORDS.any? { |word| text.match?(Regexp.new("\\b#{Regexp.escape(word)}\\b", Regexp::IGNORECASE)) }
+    errors.add(:body, 'contains inappropriate language') if CURSE_WORDS.any? { |w| body&.match?(/\b#{Regexp.escape(w)}\b/i) }
   end
 
   def created_updated_by_differ_from_user

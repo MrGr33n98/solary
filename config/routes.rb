@@ -7,22 +7,16 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :solar_users, class_name: 'SolarUser', controllers: {
+  devise_for :solar_users, controllers: {
     sessions: 'solar_users/sessions',
-    registrations: 'solar_users/registrations',
-    passwords: 'solar_users/passwords',
-    confirmations: 'solar_users/confirmations',
-    unlocks: 'solar_users/unlocks'
+    registrations: 'solar_users/registrations'
   }
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
-  # Redirect singular to plural for saas_access_management
-  get '/admin/saas_access_management', to: redirect('/admin/saas_access_managements')
-  # Redirect singular to plural for saas_sponsored
-  get '/admin/saas_sponsored', to: redirect('/admin/saas_sponsoreds')
+  
 
-  resources :solar_companies do
+  resources :solar_companies, param: :slug do
     resources :solar_reviews
     resources :solar_contents
     resources :review_campaigns

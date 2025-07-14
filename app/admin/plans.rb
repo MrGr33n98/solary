@@ -14,7 +14,11 @@ ActiveAdmin.register Plan do
     column :duration_months
     column :features do |plan|
       ul do
-        plan.features.map { |f| li f }
+        if plan.features.present?
+          JSON.parse(plan.features).map { |f| li f }
+        else
+          li "No features defined"
+        end
       end
     end
     column :description
@@ -26,6 +30,7 @@ ActiveAdmin.register Plan do
     redirect_to admin_plans_path, notice: 'Plan activated successfully'
   end
   controller do
+    skip_authorization_check only: :index
     def scoped_collection
       if current_admin_user && current_admin_user.solar_user&.role == 'admin'
         super

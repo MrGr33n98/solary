@@ -5,6 +5,7 @@ ActiveAdmin.register Badge do
 
   controller do
     include CanCan::ControllerAdditions
+    skip_authorization_check only: :index
   end
 
   filter :name_cont, label: 'Nome'
