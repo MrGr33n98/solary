@@ -1,5 +1,6 @@
 class Plan < ApplicationRecord
-  serialize :features, JSON
+  has_many :plan_features, dependent: :destroy
+  has_many :features, through: :plan_features
 
   attribute :active, :boolean, default: true
 
@@ -8,6 +9,6 @@ class Plan < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    []
+    ["features"]
   end
 end

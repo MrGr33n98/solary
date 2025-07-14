@@ -3,12 +3,13 @@ class SolarCompany < ApplicationRecord
   friendly_id :name, use: :slugged
 
   # Associações de auditoria
-  belongs_to :creator, class_name: "SolarUser", foreign_key: :created_by_id
+  belongs_to :creator, class_name: "SolarUser", foreign_key: :created_by_id, optional: true
   belongs_to :updater, class_name: "SolarUser", foreign_key: :updated_by_id
 
   # Imagens
   has_one_attached  :logo
   has_one_attached  :cover_image
+  has_one_attached  :banner_image
   has_many_attached :photos
 
   # Relações

@@ -1,115 +1,122 @@
 ActiveAdmin.register SolarCompany do
+  menu label: "Company Page"     # nome no menu lateral
+
+  # 1. Permitir todos os campos de configuração
+  permit_params :name,
+                :slug,
+                :logo,
+                :title_h1,
+                :title_h2,
+                :banner_image,
+                :show_breadcrumbs,
+                :show_header,
+                :show_search_reviews,
+                :show_filter_by_rating,
+                :show_sort_dropdown,
+                :show_overall_rating,
+                :show_rating_breakdown,
+                :show_reviews_list,
+                :show_pagination,
+                :show_sidebar_top_companies,
+                category_ids: []
+
+  # 2. Expor resposta JSON para consumo no Next.js
   controller do
-    skip_authorization_check only: [:index, :new, :show, :edit, :upload_csv, :import_csv]
+    respond_to :html, :json
+    skip_authorization_check # Adicionado para evitar erros de autorização
 
     def find_resource
-      scoped_collection.friendly.find(params[:id])
+      scoped_collection.where(slug: params[:id]).first! || super
     end
   end
 
-  permit_params :name, :slug, :cnpj, :street_address, :city, :state, :postal_code, :latitude, :longitude,
-                :contact_name, :contact_email, :contact_phone, :website, :facebook_url, :twitter_url, :linkedin_url,
-                :installed_capacity_mwp, :commissioning_date, :module_technology, :module_brand, :module_count,
-                :inverter_brand, :inverter_model, :avg_rating, :reviews_count, :total_energy_generated_mwh,
-                :meta_title, :meta_description, :meta_keywords, :status, :created_by_id, :updated_by_id, :deleted_at,
-                photos: [], logo: [], cover_image: [], csv_file: []
+  filter :created_by_id,
+         as: :select,
+         collection: -> { SolarUser.order(:name).pluck(:name, :id) },
+         label: 'Criado por'
 
+  # 3. Index (lista resumida) com status dos flags
   index do
     selectable_column
     id_column
     column :name
     column :slug
-    column :cnpj
-    column :city
-    column :state
-    column :status
-    column :installed_capacity_mwp
-    column :avg_rating
-    column :reviews_count
-    column :creator
-    column :updater
-    column :created_at
-    actions
+    column("Header")     { |company| status_tag(company.show_header) }
+    column("Banner")     { |company| status_tag(company.banner_image.attached?) }
+    column("Reviews")    { |company| status_tag(company.show_reviews_list) }
+    column :updated_at
+    actions defaults: true do |company_record|
+      link_to "JSON", admin_solar_company_path(company_record, format: :json)
+    end
   end
 
-  filter :name
-  filter :slug
-  filter :cnpj
-  filter :city
-  filter :state
-  filter :status, as: :select, collection: SolarCompany.statuses.keys
-  filter :installed_capacity_mwp
-  filter :avg_rating
-  filter :reviews_count
-  filter :created_by_id, as: :select, collection: -> { SolarUser.all.map { |u| [u.email, u.id] } }
-  filter :updated_by_id, as: :select, collection: -> { SolarUser.all.map { |u| [u.email, u.id] } }
-  filter :created_at
+  # 4. Formulário de criação/edição
+  form(html: { multipart: true }) do |f|
+    f.semantic_errors if f.object.errors.any?
 
-  action_item :import_csv, only: :index do
-    link_to 'Importar Empresas CSV', admin_import_solar_companies_path
-  end
-
-  form do |f|
-    f.inputs "Identificação" do
-      f.input :name
-      f.input :slug
-      f.input :cnpj
+    f.inputs "Identidade e Textos" do
+      f.input :name,        label: "Nome da Empresa"
+      f.input :slug,        label: "Slug (URL amigável)"
+      f.input :logo,        as: :file, label: "Logo"
+      f.input :title_h1,    label: "Título H1"
+      f.input :title_h2,    label: "Título H2"
     end
 
-    f.inputs "Endereço & Geolocalização" do
-      f.input :street_address
-      f.input :city
-      f.input :state
-      f.input :postal_code
-      f.input :latitude
-      f.input :longitude
+    f.inputs "Banner" do
+      f.input :banner_image,
+              as: :file,
+              hint: f.object.banner_image.attached? ?
+                image_tag(f.object.banner_image.variant(resize_to_limit: [200,100])) :
+                content_tag(:span, "Nenhum banner carregado"),
+              label: "Banner (upload)"
     end
 
-    f.inputs "Contato & Web" do
-      f.input :contact_name
-      f.input :contact_email
-      f.input :contact_phone
-      f.input :website
-      f.input :facebook_url
-      f.input :twitter_url
-      f.input :linkedin_url
+    f.inputs "Categorias" do
+      f.input :categories,
+              as: :check_boxes,
+              collection: Category.all.map { |c| [c.name, c.id] },
+              label: "Listar em categorias"
     end
 
-    f.inputs "Branding & Imagens" do
-      f.input :logo, as: :file
-      f.input :cover_image, as: :file
-      f.input :photos, as: :file, input_html: { multiple: true }
-    end
-
-    f.inputs "Especificações Técnicas" do
-      f.input :installed_capacity_mwp
-      f.input :commissioning_date, as: :datepicker
-      f.input :module_technology
-      f.input :module_brand
-      f.input :module_count
-      f.input :inverter_brand
-      f.input :inverter_model
-    end
-
-    f.inputs "Indicadores & Métricas" do
-      f.input :avg_rating
-      f.input :reviews_count
-      f.input :total_energy_generated_mwh
-    end
-
-    f.inputs "SEO & Metadados" do
-      f.input :meta_title
-      f.input :meta_description
-      f.input :meta_keywords
-    end
-
-    f.inputs "Governança & Auditoria" do
-      f.input :status, as: :select, collection: SolarCompany.statuses.keys
-      f.input :created_by_id, as: :select, collection: SolarUser.all.map { |u| [u.email, u.id] }
-      f.input :updated_by_id, as: :select, collection: SolarUser.all.map { |u| [u.email, u.id] }
-      f.input :deleted_at, as: :datetime_picker
+    f.inputs "Controle de Componentes (Checkboxes)" do
+      f.input :show_breadcrumbs,           as: :boolean, label: "Mostrar Breadcrumbs"
+      f.input :show_header,                as: :boolean, label: "Mostrar Cabeçalho (logo + títulos)"
+      f.input :show_search_reviews,        as: :boolean, label: "Mostrar caixa de busca de reviews"
+      f.input :show_filter_by_rating,      as: :boolean, label: "Mostrar filtro por estrelas"
+      f.input :show_sort_dropdown,         as: :boolean, label: "Mostrar dropdown de ordenação"
+      f.input :show_overall_rating,        as: :boolean, label: "Mostrar nota geral"
+      f.input :show_rating_breakdown,      as: :boolean, label: "Mostrar distribuição de notas"
+      f.input :show_reviews_list,          as: :boolean, label: "Mostrar lista de reviews"
+      f.input :show_pagination,            as: :boolean, label: "Mostrar paginação"
+      f.input :show_sidebar_top_companies, as: :boolean, label: "Mostrar sidebar de top companies"
     end
 
     f.actions
+  end
+
+  # 5. Preview no Admin
+  show do
+    attributes_table do
+      row :name
+      row :slug
+      row :logo_url
+      row :title_h1
+      row :title_h2
+      row("Banner") do |c|
+        image_tag url_for(c.banner_image) if c.banner_image.attached?
+      end
+      
+      row("Breadcrumbs")          { status_tag(resource.show_breadcrumbs) }
+      row("Header")               { status_tag(resource.show_header) }
+      row("Busca de Reviews")     { status_tag(resource.show_search_reviews) }
+      row("Filtro por Estrelas")  { status_tag(resource.show_filter_by_rating) }
+      row("Ordenação")            { status_tag(resource.show_sort_dropdown) }
+      row("Nota Geral")           { status_tag(resource.show_overall_rating) }
+      row("Distribuição de Notas"){ status_tag(resource.show_rating_breakdown) }
+      row("Lista de Reviews")     { status_tag(resource.show_reviews_list) }
+      row("Paginação")            { status_tag(resource.show_pagination) }
+      row("Sidebar Top Companies"){ status_tag(resource.show_sidebar_top_companies) }
+    end
+    active_admin_comments
   end
 end

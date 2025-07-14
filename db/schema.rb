@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_14_162253) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_14_214601) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -89,6 +89,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_14_162253) do
     t.string "slug"
   end
 
+  create_table "features", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "active", default: true, null: false
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
@@ -124,11 +132,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_14_162253) do
     t.index ["recipient_type", "recipient_id"], name: "index_noticed_notifications_on_recipient"
   end
 
+  create_table "plan_features", force: :cascade do |t|
+    t.integer "plan_id", null: false
+    t.integer "feature_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feature_id"], name: "index_plan_features_on_feature_id"
+    t.index ["plan_id"], name: "index_plan_features_on_plan_id"
+  end
+
   create_table "plans", force: :cascade do |t|
     t.string "name"
     t.decimal "price", precision: 10, scale: 2
     t.string "duration"
-    t.text "features"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active"
@@ -231,6 +247,18 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_14_162253) do
     t.string "meta_description"
     t.string "meta_keywords"
     t.datetime "deleted_at"
+    t.string "title_h1"
+    t.string "title_h2"
+    t.boolean "show_breadcrumbs", default: false, null: false
+    t.boolean "show_header", default: false, null: false
+    t.boolean "show_search_reviews", default: false, null: false
+    t.boolean "show_filter_by_rating", default: false, null: false
+    t.boolean "show_sort_dropdown", default: false, null: false
+    t.boolean "show_overall_rating", default: false, null: false
+    t.boolean "show_rating_breakdown", default: false, null: false
+    t.boolean "show_reviews_list", default: false, null: false
+    t.boolean "show_pagination", default: false, null: false
+    t.boolean "show_sidebar_top_companies", default: false, null: false
     t.index ["cnpj"], name: "index_solar_companies_on_cnpj", unique: true
     t.index ["created_by_id"], name: "index_solar_companies_on_created_by_id"
     t.index ["deleted_at"], name: "index_solar_companies_on_deleted_at"
@@ -307,6 +335,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_14_162253) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "plan_features", "features"
+  add_foreign_key "plan_features", "plans"
   add_foreign_key "posts", "solar_users"
   add_foreign_key "review_campaigns", "solar_companies"
   add_foreign_key "review_campaigns", "solar_users", column: "user_id"

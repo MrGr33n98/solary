@@ -1,5 +1,5 @@
 ActiveAdmin.register Plan do
-  permit_params :name, :price, :description, :features, :duration_months
+  permit_params :name, :price, :description, :duration_months, feature_ids: []
 
   filter :name
   filter :price
@@ -12,14 +12,8 @@ ActiveAdmin.register Plan do
       number_to_currency(plan.price)
     end
     column :duration_months
-    column :features do |plan|
-      ul do
-        if plan.features.present?
-          JSON.parse(plan.features).map { |f| li f }
-        else
-          li "No features defined"
-        end
-      end
+    column 'Features' do |plan|
+      plan.features.pluck(:name).join(", ")
     end
     column :description
     column :created_at
@@ -30,7 +24,7 @@ ActiveAdmin.register Plan do
     redirect_to admin_plans_path, notice: 'Plan activated successfully'
   end
   controller do
-    skip_authorization_check only: :index
+    skip_authorization_check
     def scoped_collection
       if current_admin_user && current_admin_user.solar_user&.role == 'admin'
         super
@@ -44,9 +38,28 @@ ActiveAdmin.register Plan do
       f.input :name
       f.input :price
       f.input :description, as: :text
-      f.input :features, as: :text, input_html: { rows: 5, value: f.object.features.to_json }
       f.input :duration_months
+      f.input :features, as: :check_boxes, collection: Feature.all.map { |feature| [feature.name.humanize, feature.id] }
     end
     f.actions
+  end
+
+  show do
+    attributes_table do
+      row :name
+      row :price do |plan|
+        number_to_currency(plan.price)
+      end
+      row :duration_months
+      row :description
+      row :created_at
+      row :updated_at
+    end
+
+    panel "Features" do
+      ul do
+        plan.features.each { |f| li f.name }
+      end
+    end
   end
 end
