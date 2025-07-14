@@ -1,5 +1,6 @@
 class Badge < ApplicationRecord
   belongs_to :badgeable, polymorphic: true
+  has_one_attached :seal
 
   validates :name, presence: true
   validates :description, presence: true
