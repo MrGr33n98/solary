@@ -1,0 +1,11 @@
+<% content_for :title, "Subcategorias de #{@category.name}" %>
+
+<div class="container my-5">
+  <h1 class="display-4">Subcategorias de <%= @category.name %></h1>
+
+  <div class="list-group mt-4">
+    <% @subcategories.each do |subcategory| %>
+      <%= link_to subcategory.name, category_subcategory_path(@category, subcategory), class: "list-group-item list-group-item-action" %>
+    <% end %>
+  </div>
+</div>

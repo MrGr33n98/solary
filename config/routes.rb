@@ -21,7 +21,9 @@ Rails.application.routes.draw do
     resources :solar_contents
     resources :review_campaigns
   end
-  resources :categories
+  resources :categories, param: :slug do
+    resources :subcategories, only: [:show, :index]
+  end
   resources :badges
   resources :posts
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_14_133307) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_14_162253) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -79,6 +79,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_14_133307) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "sponsor_badge"
+    t.string "headline_h1"
+    t.string "headline_h2"
+    t.string "headline_h3"
+    t.string "meta_title"
+    t.text "meta_description"
+    t.string "og_image"
+    t.string "slug"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -279,6 +287,24 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_14_133307) do
     t.index ["reset_password_token"], name: "index_solar_users_on_reset_password_token", unique: true
   end
 
+  create_table "subcategories", force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.boolean "sponsored"
+    t.integer "category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "sponsor_badge"
+    t.string "headline_h1"
+    t.string "headline_h2"
+    t.string "headline_h3"
+    t.string "meta_title"
+    t.text "meta_description"
+    t.string "og_image"
+    t.index ["category_id"], name: "index_subcategories_on_category_id"
+    t.index ["slug"], name: "index_subcategories_on_slug", unique: true
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "posts", "solar_users"
@@ -296,4 +322,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_14_133307) do
   add_foreign_key "solar_reviews", "review_campaigns"
   add_foreign_key "solar_reviews", "solar_companies"
   add_foreign_key "solar_reviews", "solar_users", column: "user_id"
+  add_foreign_key "subcategories", "categories"
 end

@@ -1,0 +1,32 @@
+<% content_for :title, @subcategory.meta_title %>
+<% content_for :description, @subcategory.meta_description %>
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+
+      <% if @subcategory.banner.attached? %>
+        <%= image_tag @subcategory.banner, class: 'img-fluid rounded mb-4', alt: @subcategory.name %>
+      <% end %>
+
+      <h1 class="display-4"><%= @subcategory.name %></h1>
+
+      <% if @subcategory.sponsored? %>
+        <span class="badge bg-warning text-dark mb-3">Patrocinado</span>
+      <% end %>
+
+      <p class="lead">Esta subcategoria pertence a <%= link_to @subcategory.category.name, category_path(@subcategory.category) %>.</p>
+
+      <hr class="my-4">
+
+      <h2 class="h4">Conteúdo Relacionado</h2>
+      <%# Aqui você pode listar artigos ou produtos filtrados por esta subcategoria %>
+      <p>Em breve, listaremos conteúdos e produtos relacionados a <%= @subcategory.name %>.</p>
+
+      <div class="mt-5">
+        <%= link_to 'Ver todos os produtos desta categoria', category_path(@subcategory.category), class: 'btn btn-primary btn-lg' %>
+      </div>
+
+    </div>
+  </div>
+</div>

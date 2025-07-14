@@ -1,0 +1,27 @@
+<%# app/views/categories/show.html.erb %>
+
+<%= render 'categories/banner', category: @category %>
+
+<div class="container mx-auto px-4 py-8">
+  <%# Breadcrumb (exemplo simples, ajuste conforme sua implementação) %>
+  <nav class="text-gray-600 text-sm mb-4">
+    <%= link_to "Home", root_path %> &gt; <%= link_to "Categorias", categories_path %> &gt; <%= @category.name %>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-6"><%= @category.name %></h1>
+
+  <%# Grid de conteúdo relacionado (exemplo) %>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @category.solar_contents.each do |content| %>
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-2"><%= link_to content.title, content %></h2>
+        <p class="text-gray-700 text-sm"><%= truncate(content.body, length: 100) %></p>
+        <%# Adicione mais detalhes do conteúdo aqui %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @category.solar_contents.empty? %>
+    <p class="text-gray-600 mt-8">Nenhum conteúdo relacionado encontrado para esta categoria.</p>
+  <% end %>
+</div>
